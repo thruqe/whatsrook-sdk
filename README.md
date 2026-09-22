@@ -2,9 +2,9 @@
 
 _`whatsrook-sdk` is a Rust library for building external plugins that run inside [WhatsRook](https://github.com/Thruqe/whatsrook) — with full access to the WhatsApp action protocol._
 
-[![crates.io](https://img.shields.io/crates/v/whatsrook-sdk.svg)](https://crates.io/crates/whatsrook-sdk)
-[![docs.rs](https://docs.rs/whatsrook-sdk/badge.svg)](https://docs.rs/whatsrook-sdk)
-[![CI](https://github.com/Thruqe/whatsrook-sdk/actions/workflows/ci.yml/badge.svg)](https://github.com/Thruqe/whatsrook-sdk/actions/workflows/ci.yml)
+[![crates.io](https://img.shields.io/crates/v/whatsrook-sdk)](https://crates.io/crates/whatsrook-sdk)
+[![docs.rs](https://img.shields.io/docsrs/whatsrook-sdk)](https://docs.rs/whatsrook-sdk)
+[![CI](https://github.com/Thruqe/whatsrook-sdk/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Thruqe/whatsrook-sdk/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 ## Usage
