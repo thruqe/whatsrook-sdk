@@ -52,8 +52,7 @@ pub use reqwest;
 pub use reqwest::blocking::Client as HttpClient;
 
 /// Default browser User-Agent used by [`create_http_client`].
-pub const DEFAULT_USER_AGENT: &str =
-    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36";
+pub const DEFAULT_USER_AGENT: &str = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36";
 
 // ─── Request ─────────────────────────────────────────────────────────────────
 
@@ -159,16 +158,15 @@ impl Request {
         if !io::stdin().is_terminal() {
             let stdin = io::stdin();
             let mut line = String::new();
-            if stdin.lock().read_line(&mut line).is_ok() && !line.trim().is_empty() {
-                if let Ok(req) = serde_json::from_str::<Request>(line.trim()) {
-                    if !req.command.is_empty()
-                        || !req.args.is_empty()
-                        || !req.raw_args.is_empty()
-                        || !req.chat.is_empty()
-                    {
-                        return req;
-                    }
-                }
+            if stdin.lock().read_line(&mut line).is_ok()
+                && !line.trim().is_empty()
+                && let Ok(req) = serde_json::from_str::<Request>(line.trim())
+                && (!req.command.is_empty()
+                    || !req.args.is_empty()
+                    || !req.raw_args.is_empty()
+                    || !req.chat.is_empty())
+            {
+                return req;
             }
         }
 
@@ -518,7 +516,10 @@ pub fn send_edit_live(msg_id: &str, text: &str) {
 /// whatsrook_sdk::send_react("🚀");
 /// ```
 pub fn send_react(emoji: &str) {
-    send_action(&Action::React { msg_id: None, emoji });
+    send_action(&Action::React {
+        msg_id: None,
+        emoji,
+    });
 }
 
 /// Revoke (delete for everyone) a message by its ID.

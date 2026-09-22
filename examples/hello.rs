@@ -13,7 +13,7 @@
 //! .hello World
 //! ```
 
-use whatsrook_sdk::{respond, Request};
+use whatsrook_sdk::{Request, respond};
 
 fn main() {
     let req = Request::load();

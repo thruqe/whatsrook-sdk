@@ -13,7 +13,7 @@
 
 use serde::Deserialize;
 
-use whatsrook_sdk::{create_http_client, respond_err, send_image, send_react, Request};
+use whatsrook_sdk::{Request, create_http_client, respond_err, send_image, send_react};
 
 #[derive(Deserialize)]
 struct DogResponse {

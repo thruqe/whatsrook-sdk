@@ -14,8 +14,8 @@ use std::thread;
 use std::time::Duration;
 
 use whatsrook_sdk::{
-    respond, send_done, send_edit_live, send_loader, send_poll, send_react, send_reply_live,
-    Request,
+    Request, respond, send_done, send_edit_live, send_loader, send_poll, send_react,
+    send_reply_live,
 };
 
 fn main() {
