@@ -2,7 +2,7 @@
 name = "whatsrook-sdk"
 version = "0.1.0"
 edition = "2021"
-authors = ["Thruqe <thruqe@outlook.com>"]
+authors = ["Thruqe <thruqe@gmail.com>"]
 description = "Rust SDK for building WhatsRook external plugins"
 documentation = "https://docs.rs/whatsrook-sdk"
 homepage = "https://github.com/Thruqe/whatsrook-sdk"

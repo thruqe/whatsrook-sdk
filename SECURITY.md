@@ -24,4 +24,4 @@ Plugins must not be used to:
 
 ## Reporting a Vulnerability
 
-If a security issue is found in this crate, please contact [thruqe@outlook.com](mailto:thruqe@outlook.com) rather than disclosing it publicly.
+If a security issue is found in this crate, please contact [thruqe@gmail.com](mailto:thruqe@gmail.com) rather than disclosing it publicly.
