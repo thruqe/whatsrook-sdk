@@ -73,8 +73,11 @@ jobs:
         run: |
           git config user.email "thruqe@gmail.com"
           git config user.name "Thruqe"
-          git tag "v${{ steps.ver.outputs.version }}"
-          git push origin HEAD:main --follow-tags
+          git tag "v${{ steps.ver.outputs.version }}" 2>/dev/null \
+            || echo "Tag v${{ steps.ver.outputs.version }} already exists — skipping."
+          git push origin "v${{ steps.ver.outputs.version }}" 2>/dev/null \
+            || echo "Tag already on remote — skipping push."
+          git push origin HEAD:main || true
 
       # ── GitHub release ─────────────────────────────────────────────────────
       - name: Create GitHub release
@@ -84,7 +87,8 @@ jobs:
           gh release create "v${{ steps.ver.outputs.version }}" \
             --title "v${{ steps.ver.outputs.version }}" \
             --generate-notes \
-            --latest
+            --latest \
+          || echo "Release v${{ steps.ver.outputs.version }} already exists — skipping."
 
       # ── crates.io publish ──────────────────────────────────────────────────
       - name: Publish to crates.io
