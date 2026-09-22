@@ -26,7 +26,6 @@ External plugins are standalone binaries. WhatsRook spawns them as child process
 - Simple-mode output for single-reply plugins with no framing overhead
 - Preconfigured blocking HTTP client (reqwest + rustls, browser User-Agent)
 - CLI-argument fallback for local development and testing without WhatsRook
-- Compile targets: native binaries and `wasm32-wasip1` WebAssembly
 
 ## How It Works
 
@@ -128,13 +127,6 @@ For simple single-reply plugins, use `respond(text)` — plain text written to `
 | `aarch64-apple-darwin` | macOS Apple Silicon |
 | `x86_64-apple-darwin` | macOS Intel |
 | `x86_64-pc-windows-msvc` | Windows x64 |
-| `wasm32-wasip1` | WebAssembly / WASI — universal, sandboxed |
-
-Build for WASM with:
-
-```bash
-cargo build --target wasm32-wasip1 --release
-```
 
 ## Contributions
 

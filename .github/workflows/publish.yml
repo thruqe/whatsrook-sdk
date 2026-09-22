@@ -1,20 +1,28 @@
-name: Publish
+name: Release
 
 on:
-  push:
-    tags:
-      - "v*"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to release (e.g. 0.2.0) — leave blank to release the current Cargo.toml version"
+        required: false
+        type: string
 
 env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  publish:
-    name: Publish to crates.io
+  release:
+    name: Release v${{ inputs.version || '(current)' }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Use a PAT or the default token — needs push + tag permissions.
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install Rust stable
         uses: dtolnay/rust-toolchain@stable
@@ -26,10 +34,58 @@ jobs:
             ~/.cargo/registry
             ~/.cargo/git
             target
-          key: ${{ runner.os }}-cargo-publish-${{ hashFiles('**/Cargo.lock') }}
+          key: ${{ runner.os }}-cargo-release-${{ hashFiles('**/Cargo.lock') }}
+
+      # ── Optional version bump ──────────────────────────────────────────────
+      - name: Bump version in Cargo.toml
+        if: ${{ inputs.version != '' }}
+        run: sed -i "s/^version = \".*\"/version = \"${{ inputs.version }}\"/" Cargo.toml
+
+      - name: Resolve release version
+        id: ver
+        run: |
+          VERSION=$(cargo metadata --no-deps --format-version 1 | python3 -c "import sys,json; print(json.load(sys.stdin)['packages'][0]['version'])")
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      # ── Build & verify ─────────────────────────────────────────────────────
+      - name: Check
+        run: cargo check
+
+      - name: Clippy
+        run: cargo clippy -- -D warnings
+
+      - name: Test
+        run: cargo test --all-features
 
       - name: Verify package
         run: cargo package --list
 
-      - name: Publish
+      # ── Commit bump, tag, push ─────────────────────────────────────────────
+      - name: Commit version bump
+        if: ${{ inputs.version != '' }}
+        run: |
+          git config user.email "thruqe@gmail.com"
+          git config user.name "Thruqe"
+          git add Cargo.toml
+          git diff --cached --quiet || git commit -m "chore: release v${{ steps.ver.outputs.version }}"
+
+      - name: Create and push tag
+        run: |
+          git config user.email "thruqe@gmail.com"
+          git config user.name "Thruqe"
+          git tag "v${{ steps.ver.outputs.version }}"
+          git push origin HEAD:main --follow-tags
+
+      # ── GitHub release ─────────────────────────────────────────────────────
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "v${{ steps.ver.outputs.version }}" \
+            --title "v${{ steps.ver.outputs.version }}" \
+            --generate-notes \
+            --latest
+
+      # ── crates.io publish ──────────────────────────────────────────────────
+      - name: Publish to crates.io
         run: cargo publish --token ${{ secrets.CARGO_REGISTRY_TOKEN }}
